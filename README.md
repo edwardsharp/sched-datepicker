@@ -2,17 +2,17 @@
 
 yet another datepicker (sched.site)
 
-## Install the Polymer-CLI
+## DEMO & API DOC
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+https://edwardsharp.github.io/sched-datepicker/
 
-## Viewing Your Application
+## Viewing
 
 ```
 $ polymer serve
 ```
 
-## Building Your Application
+## Building (...i guess?)
 
 ```
 $ polymer build
