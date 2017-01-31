@@ -1,0 +1,275 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../neon-animation/animations/slide-left-animation.html">
+<link rel="import" href="../neon-animation/animations/slide-right-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
+<!--
+`sched-month-view`
+yet another month-view (sched.site)
+
+@demo demo/index.html 
+-->
+
+<dom-module id="sched-month-view">
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+        margin-top: 10px;
+      }
+
+      paper-button{
+        min-width: 100%;
+        border-radius: 999px;
+        padding: 0.5em;
+      }
+
+      paper-button:hover {
+        background-color: var(--paper-red-500);
+        color: white;
+      }
+
+      paper-button[disabled] {
+        background: none;
+      }
+
+      #weekdays, .row{
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+    
+      #weekdays .day {
+        font-size: 0.9em;
+      }
+      .day {
+        @apply(--layout-flex);
+        text-align: center;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        line-height: 1.6em;
+      }
+      #days{
+        padding-top: 10px;
+      }
+
+      .today, paper-button.today[disabled] {
+        background: #eceff1;
+      }
+
+      .selected {
+        background-color: var(--paper-red-500);
+        color: white;
+      }
+
+    </style>
+    
+    <div id="weekdays">
+      <span class="day">S</span>
+      <span class="day">M</span>
+      <span class="day">T</span>
+      <span class="day">W</span>
+      <span class="day">T</span>
+      <span class="day">F</span>
+      <span class="day">S</span>
+    </div>
+
+    <div id="days">
+
+
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sched-month-view',
+
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
+
+      properties: {
+        date: {
+          type: String,
+          notify: true
+        },
+        mDateTrigger: {
+          type: Number,
+          notify: true
+        },
+        isSelected: {
+          type: Boolean,
+          notify: true
+        },
+        mDate: {
+          type: Object,
+          notify: true
+        },
+        dateFormat: String,
+        minDate: String,
+        maxDate: String,
+        availableDates: Array,
+        monthFormat: {
+          type: String,
+          value: 'YYYY-MM',
+        },
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'prev': [{
+                name: 'slide-right-animation',
+                node: this.$.days
+              }, {
+                name: 'fade-out-animation',
+                node: this.$.days
+              }],
+              'next': [{
+                name: 'slide-left-animation',
+                node: this.$.days
+              }, {
+                name: 'fade-out-animation',
+                node: this.$.days
+              }]
+            }
+          }
+        }
+      },
+
+      listeners: {
+        'neon-animation-finish': '_onNeonAnimationFinish'
+      },
+
+      ready: function() {
+        this.scopeSubtree(this.$.days, true);
+        this.createMonthView();
+      },
+
+      prevMonth: function(){
+        this.playAnimation('prev');
+        this.set('mDate', this.mDate.subtract(1, 'months'));
+        this.set('date', this.mDate.format(this.dateFormat));
+        this.async(this.createMonthView, 100);
+      },
+      nextMonth: function(){
+        this.playAnimation('next');
+        this.set('mDate', this.mDate.add(1, 'months'));
+        this.set('date', this.mDate.format(this.dateFormat));
+        this.async(this.createMonthView, 100);
+      },
+
+      _onNeonAnimationFinish: function(){
+        // console.log('animation finish!');
+      },
+
+      _dayTap: function(e){
+
+        this.set('mDate', moment( this.mDate.format('YYYY-MM')+'-'+e.target.day, 'YYYY-MM-DD' ));
+        this.set('date', this.mDate.format(this.dateFormat));
+
+        _toClear = this.querySelectorAll('.selected');
+        for (var i = 0; i < _toClear.length; i++) {
+            //work with checkboxes[i]
+            _toClear[i].classList.remove('selected');
+        }
+        e.target.classList.add('selected');
+        this.set('isSelected', true);
+        this.set('mDateTrigger', this.mDateTrigger + 1);
+        
+
+        // console.log('date is now:',this.date);
+      },
+
+      createMonthView: function(){
+
+        //hmm, is there a better way to destroy these paper-button elementz & listenerz?
+        this.$.days.innerHTML = '';
+
+        var _rowElem = document.createElement('div')
+          , _span = document.createElement('span');
+          
+        _rowElem.classList.add('row');
+        _span.classList.add('day');
+
+        var _date = this.mDate.clone()
+          , _day = 1
+          , _firstDayOfMonth = moment(_date.format('YYYY')+'-'+_date.format('MM')+'-01', 'YYYY-MM-DD')
+          , _rowMod = _firstDayOfMonth.weekday()
+          , _month = _date.month()
+          , _mMinDate = moment(this.minDate, this.dateFormat)
+          , _mMaxDate = moment(this.maxDate, this.dateFormat)
+          , _today = moment().format('YYYY-MM-DD');
+        
+        //pad the beginning of the month (so, sunday is .weekday() 0)
+        if(_rowMod > 0){
+          for(i=0; i < _firstDayOfMonth.weekday(); i++){
+            _span = document.createElement('span');
+            _span.classList.add('day');
+            _span.innerHTML = '';
+            _rowElem.appendChild(_span);
+          }
+        }
+
+        while( _firstDayOfMonth.month() == _month ){
+
+          _span = document.createElement('span');
+          _span.classList.add('day');
+
+          var _dayElem = document.createElement('paper-button');
+          
+          _dayElem.innerHTML = _day;
+          _dayElem.day = _day;
+
+          if( _firstDayOfMonth < _mMinDate 
+              || _firstDayOfMonth > _mMaxDate
+              || (this.availableDates && this.availableDates.indexOf(_firstDayOfMonth.format(this.dateFormat)) < 0)){
+            _dayElem.disabled = true;
+          }
+
+          if(_firstDayOfMonth.format('YYYY-MM-DD') == _today){
+            _dayElem.classList.add('today');
+          }
+
+          this.listen(_dayElem, 'tap', '_dayTap');
+
+          _span.appendChild(_dayElem);
+          _rowElem.appendChild(_span);
+          
+
+          _rowMod++;
+          //do the increment before the if statement since 0 % 0 == 0
+          if(_rowMod % 7 == 0){
+            this.$.days.appendChild(_rowElem);
+            _rowElem = document.createElement('div');
+            _rowElem.classList.add('row');
+          }
+          _day++;
+          
+          _firstDayOfMonth.add(1, 'days');
+        } //end while()
+
+        //pad the end of the month so every row has 7 elements...
+        if(_rowMod % 7 != 0){
+          for(i=0; i < 7 - (_rowMod % 7); i++){
+            _span = document.createElement('span');
+            _span.classList.add('day');
+            _span.innerHTML = '';
+            _rowElem.appendChild(_span);
+          }
+        }
+
+        this.$.days.appendChild(_rowElem);
+
+      },
+
+
+
+    });
+  </script>
+</dom-module>

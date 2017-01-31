@@ -1,0 +1,206 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+
+<link rel="import" href="sched-month-view.html">
+<!--
+`sched-datepicker`
+yet another datepicker (sched.site)
+
+features:
+  - today button 
+  - min & max dates 
+  - array of available dates
+
+@demo demo/index.html 
+-->
+
+<dom-module id="sched-datepicker">
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+
+      paper-icon-button {
+        border-radius: 999px;
+      }
+      paper-icon-button:hover {
+        background-color: var(--paper-grey-200);
+      }
+
+      .flex-horizontal {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      .date-heading {
+        @apply(--layout-flex);
+        text-align: left;
+        padding-left: 1em;
+        font-size: 1.5em;
+      }
+
+    </style>
+
+
+    <!-- header -->
+    <div class="container flex-horizontal">
+      
+      <div class="date-heading">
+        [[dateHeading]]
+      </div>
+      <div>
+        <paper-icon-button disabled="[[prevMonthDisabled]]" icon="chevron-left" on-tap="_prevMonth"></paper-icon-button>
+      </div>
+      <div>
+        <paper-icon-button hidden="[[todayHidden]]" icon="today" on-tap="_today" title="Today"></paper-icon-button>
+      </div>
+      <div>
+        <paper-icon-button disabled="[[nextMonthDisabled]]" icon="chevron-right" on-tap="_nextMonth"></paper-icon-button>
+      </div>
+    </div>
+
+    <sched-month-view date="{{date}}" m-date="{{mDate}}" date-format="{{dateFormat}}" m-date-trigger="{{mDateTrigger}}" is-selected="{{isSelected}}" min-date="{{minDate}}" max-date="{{maxDate}}" available-dates="{{availableDates}}"></sched-month-view>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sched-datepicker',
+
+      properties: {
+        dateFormat: {
+          type: String,
+          value: 'YYYY-MM-DD'
+        },
+        headingSelectedFormat: {
+          type: String,
+          value: 'ddd, MMM D, YYYY'
+        },
+        headingNotSelectedFormat: {
+          type: String,
+          value: 'MMMM YYYY'
+        },
+        mDate: {
+          type: Object,
+          value: moment()
+        },
+        mDateTrigger: {
+          type: Number,
+          value: 0
+        },
+        date: {
+          type: String,
+          notify: true,
+          computed: '_computeDate(mDateTrigger)'
+        },
+        dateHeading: {
+          type: String, 
+          computed: '_computeDateHeading(mDateTrigger)'
+        },
+        todayHidden: {
+          type: Boolean,
+          computed: '_todayHidden(minDate, maxDate)'
+        },
+        prevMonthDisabled: {
+          type: Boolean,
+          computed: '_prevMonthDisabled(minDate, mDateTrigger)'
+        },
+        nextMonthDisabled: {
+          type: Boolean,
+          computed: '_nextMonthDisabled(maxDate, mDateTrigger)'
+        },
+        isSelected: {
+          type: Boolean,
+          notify: true,
+          value: false
+        },
+        availableDates: Array,
+        minDate: {
+          type: String,
+          value: '',
+          observer: '_minDateObserver'
+        },
+        maxDate: {
+          type: String,
+          value: ''
+        }
+      },
+      _computeDate(mDateTrigger){
+        return this.mDate.format(this.dateFormat);
+      },
+      _computeDateHeading(mDateTrigger){
+        if(this.isSelected){
+          return this.mDate.format(this.headingSelectedFormat);
+        }else{
+          return this.mDate.format(this.headingNotSelectedFormat);
+        }
+      },
+
+      _minDateObserver: function(_minDate){
+        if( _minDate 
+            && _minDate != '' 
+            && moment(_minDate, this.dateFormat) > moment() ){
+          this.set('mDate', moment(_minDate, this.dateFormat));
+          this.set('mDateTrigger', this.mDateTrigger + 1);
+          this.async(function(){
+            var node = document.querySelector('sched-month-view');
+            // if(node){}
+            node.createMonthView();
+          }, 50);
+        }
+      },
+
+      _today: function(e){
+        this.set('isSelected', false);
+        this.set('mDate', moment());
+        this.set('mDateTrigger', this.mDateTrigger + 1);
+        var node = document.querySelector('sched-month-view');
+        node.createMonthView();
+      },
+      _todayHidden: function(){
+        if(this.minDate && this.minDate != '' && moment() < moment(this.minDate, this.dateFormat)){
+          return true;
+        }
+        if(this.maxDate && this.maxDate != '' && moment() > moment(this.maxDate, this.dateFormat)){
+          return true;
+        }
+        return false;
+      },
+
+      _prevMonth: function(e){
+        this.set('isSelected', false);
+        var node = document.querySelector('sched-month-view');
+        node.prevMonth();
+        this.set('mDateTrigger', this.mDateTrigger + 1);
+      },
+      _prevMonthDisabled: function(_minDate){
+        if(this.minDate && this.minDate != ''){
+          //is the last day of the previous month < minDate? 
+          return moment(this.mDate.format('YYYY-MM-01'), 'YYYY-MM-DD').subtract(1,'days') < moment(this.minDate, this.dateFormat);
+        }else{
+          return false;
+        }
+      },
+
+      _nextMonth: function(e){
+        this.set('isSelected', false);
+        var node = document.querySelector('sched-month-view');
+        node.nextMonth();
+        this.set('mDateTrigger', this.mDateTrigger + 1);
+      },
+      _nextMonthDisabled: function(_maxDate){
+        if(this.maxDate && this.maxDate != ''){
+          return moment(this.mDate.format("YYYY-MM-") + this.mDate.clone().daysInMonth(), 'YYYY-MM-DD') > moment(this.maxDate, this.dateFormat);
+        }else{
+          return false;
+        }
+      }
+
+    });
+  </script>
+</dom-module>

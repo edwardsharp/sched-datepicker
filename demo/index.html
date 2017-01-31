@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>sched-datepicker demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../sched-datepicker.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic sched-datepicker demo</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="scope">
+          <sched-datepicker date="{{date}}" is-selected="{{isSelected}}" min-date="2017-04-20" max-date="2017-06-06" available-dates="[[availableDates]]">
+          </sched-datepicker>
+          <template is="dom-if" if="[[isSelected]]">
+            Selected Date: [[date]]
+          </template>
+        </template>
+        <script>
+          HTMLImports.whenReady(function() {
+            var scope = Polymer.dom(document).querySelector('#scope');
+            scope.availableDates = ['2017-04-20', '2017-04-22', '2017-04-24', '2017-04-28', '2017-03-01', '2017-03-06', '2017-03-07', '2017-03-08', '2017-03-09', '2017-03-10', '2017-06-01', '2017-06-03', '2017-06-06'];
+            
+          });
+        </script>
+
+      </demo-snippet>
+    </div>
+  </body>
+</html>
