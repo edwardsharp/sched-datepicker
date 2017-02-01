@@ -91,12 +91,17 @@ features:
         },
         mDateTrigger: {
           type: Number,
-          value: 0
+          value: 0,
+          observer: '_mDateTriggerObserver'
         },
         date: {
           type: String,
           notify: true,
           computed: '_computeDate(mDateTrigger)'
+        },
+        selectedDate: {
+          type: String,
+          notify: true
         },
         dateHeading: {
           type: String, 
@@ -119,7 +124,10 @@ features:
           notify: true,
           value: false
         },
-        availableDates: Array,
+        availableDates: {
+          type: Array,
+          observer: '_availableDatesObserver'
+        },
         minDate: {
           type: String,
           value: '',
@@ -141,6 +149,24 @@ features:
         }
       },
 
+      _mDateTriggerObserver: function(_mDate){
+        console.log('_mDateTriggerObserver this.isSelected:',this.isSelected,' this.date:',this.date);
+        if(this.isSelected){
+          this.set('selectedDate', this.date);
+        }else{
+          this.set('selectedDate', undefined);
+        }
+      },
+
+      _availableDatesObserver: function(_availableDates){
+        console.log('_availableDatesObserver');
+        this.async(function(){
+          var node = document.querySelector('sched-month-view');
+          // if(node){}
+          node.createMonthView();
+        }, 50);
+      },
+
       _minDateObserver: function(_minDate){
         if( _minDate 
             && _minDate != '' 
@@ -151,7 +177,7 @@ features:
             var node = document.querySelector('sched-month-view');
             // if(node){}
             node.createMonthView();
-          }, 50);
+          }, 100);
         }
       },
 
@@ -204,3 +230,4 @@ features:
     });
   </script>
 </dom-module>
+

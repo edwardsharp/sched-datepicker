@@ -6,6 +6,12 @@ yet another datepicker (sched.site)
 
 https://edwardsharp.github.io/sched-datepicker/
 
+## INSTALL 
+
+```
+bower i edwardsharp/sched-datepicker -S
+```
+
 ## Viewing
 
 ```
