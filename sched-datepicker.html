@@ -8,12 +8,18 @@
 <link rel="import" href="sched-month-view.html">
 <!--
 `sched-datepicker`
-yet another datepicker (sched.site)
+yet another datepicker (a prototype for sched.site)
 
 features:
   - today button 
   - min & max dates 
-  - array of available dates
+  - select from an array of available dates
+  - multi date picker (select multiple days)
+  - date range picker (select two dates: start & end)
+
+note: 
+  - multidate & rangedate can't be used together! 
+
 
 @demo demo/index.html 
 -->
@@ -63,7 +69,7 @@ features:
       </div>
     </div>
 
-    <sched-month-view date="{{date}}" m-date="{{mDate}}" date-format="{{dateFormat}}" m-date-trigger="{{mDateTrigger}}" is-selected="{{isSelected}}" min-date="{{minDate}}" max-date="{{maxDate}}" available-dates="{{availableDates}}"></sched-month-view>
+    <sched-month-view date="{{date}}" m-date="{{mDate}}" date-format="{{dateFormat}}" m-date-trigger="{{mDateTrigger}}" is-selected="{{isSelected}}" min-date="{{minDate}}" max-date="{{maxDate}}" available-dates="{{availableDates}}" multidate="[[multidate]]" selected-dates="{{selectedDates}}" rangedate="[[rangedate]]", selected-range="{{selectedRange}}"></sched-month-view>
 
   </template>
 
@@ -103,6 +109,28 @@ features:
           type: String,
           notify: true
         },
+        multidate: {
+          type: Boolean,
+          value: false
+        },
+        selectedDates: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        rangedate: {
+          type: Boolean,
+          value: false
+        },
+        selectedRange: {
+          type: Object,
+          notify: true,
+          value: {start: '', end: ''}
+        },
+        _nonCompatPropz: {
+          type: String,
+          computed: '_computeNonCompatPropz(multidate, rangedate)'
+        },
         dateHeading: {
           type: String, 
           computed: '_computeDateHeading(mDateTrigger)'
@@ -138,17 +166,22 @@ features:
           value: ''
         }
       },
-      _computeDate(mDateTrigger){
+      _computeDate: function(mDateTrigger){
         return this.mDate.format(this.dateFormat);
       },
-      _computeDateHeading(mDateTrigger){
+      _computeDateHeading: function(mDateTrigger){
         if(this.isSelected){
           return this.mDate.format(this.headingSelectedFormat);
         }else{
           return this.mDate.format(this.headingNotSelectedFormat);
         }
       },
-
+      _computeNonCompatPropz: function(_multidate, _rangedate){
+        if(_multidate && _rangedate){
+          console.log('non compatiable properties set! marking property rangedate false...');
+          this.set('rangedate', false);
+        }
+      },
       _mDateTriggerObserver: function(_mDate){
         //console.log('_mDateTriggerObserver this.isSelected:',this.isSelected,' this.date:',this.date);
         if(this.isSelected){
@@ -161,7 +194,7 @@ features:
       _availableDatesObserver: function(_availableDates){
         //console.log('_availableDatesObserver');
         this.async(function(){
-          var node = document.querySelector('sched-month-view');
+          var node = this.$$('sched-month-view');
           // if(node){}
           node.createMonthView();
         }, 50);
@@ -174,7 +207,7 @@ features:
           this.set('mDate', moment(_minDate, this.dateFormat));
           this.set('mDateTrigger', this.mDateTrigger + 1);
           this.async(function(){
-            var node = document.querySelector('sched-month-view');
+            var node = this.$$('sched-month-view');
             // if(node){}
             node.createMonthView();
           }, 100);
@@ -185,7 +218,7 @@ features:
         this.set('isSelected', false);
         this.set('mDate', moment());
         this.set('mDateTrigger', this.mDateTrigger + 1);
-        var node = document.querySelector('sched-month-view');
+        var node = this.$$('sched-month-view');
         node.createMonthView();
       },
       _todayHidden: function(){
@@ -200,7 +233,7 @@ features:
 
       _prevMonth: function(e){
         this.set('isSelected', false);
-        var node = document.querySelector('sched-month-view');
+        var node = this.$$('sched-month-view');
         node.prevMonth();
         this.set('mDateTrigger', this.mDateTrigger + 1);
       },
@@ -215,7 +248,7 @@ features:
 
       _nextMonth: function(e){
         this.set('isSelected', false);
-        var node = document.querySelector('sched-month-view');
+        var node = this.$$('sched-month-view');
         node.nextMonth();
         this.set('mDateTrigger', this.mDateTrigger + 1);
       },
