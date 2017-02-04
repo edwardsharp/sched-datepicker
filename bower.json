@@ -2,6 +2,7 @@
   "name": "sched-datepicker",
   "description": "yet another datepicker (sched.site)",
   "main": "sched-datepicker.html",
+  "keywords": ["web-components", "datepicker"],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
     "paper-button": "^1.0.14",
