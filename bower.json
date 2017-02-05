@@ -1,8 +1,29 @@
 {
   "name": "sched-datepicker",
-  "description": "yet another datepicker (sched.site)",
+  "description": "yet another datepicker (sched.site). features today button, multi date and range picker.",
   "main": "sched-datepicker.html",
-  "keywords": ["web-components", "datepicker"],
+  "keywords": [
+    "web-component",
+    "web-components",
+    "web",
+    "component",
+    "components",
+    "custom",
+    "element",
+    "polymer", 
+    "datepicker",
+    "multidate",
+    "multi",
+    "date",
+    "range",
+    "rangedate",
+    "today"
+  ],
+  "authors": [
+    "3dwardsharp <edward@edwardsharp.net>"
+  ],
+  "homepage": "https://edwardsharp.github.io/sched-datepicker/",
+  "license": "GPL-3.0",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
     "paper-button": "^1.0.14",
