@@ -29,13 +29,17 @@ note:
     <style is="custom-style">
       :host {
         display: block;
+        --primary-bg-color: var(--paper-red-500);
+        --hover-bg-color: var(--paper-grey-200);
+        --hover-color: white;
+        --today-bg-color: #eceff1;
       }
 
       paper-icon-button {
         border-radius: 999px;
       }
       paper-icon-button:hover {
-        background-color: var(--paper-grey-200);
+        background-color: var(--hover-bg-color);
       }
 
       .flex-horizontal {
@@ -49,6 +53,9 @@ note:
         font-size: 1.5em;
       }
 
+      .selected-date {
+        display: inline-block;
+      }
     </style>
 
 
@@ -71,6 +78,13 @@ note:
 
     <sched-month-view date="{{date}}" m-date="{{mDate}}" date-format="{{dateFormat}}" m-date-trigger="{{mDateTrigger}}" is-selected="{{isSelected}}" min-date="{{minDate}}" max-date="{{maxDate}}" available-dates="{{availableDates}}" multidate="[[multidate]]" selected-dates="{{selectedDates}}" rangedate="[[rangedate]]", selected-range="{{selectedRange}}"></sched-month-view>
 
+    <template is="dom-if" if="[[multidate]]">
+      <template is="dom-repeat" items="[[selectedDates]]">
+        <div class="selected-date">
+          [[item]] <paper-icon-button icon="close" on-tap="_multidateRemove"></paper-icon-button>
+        </div>
+      </template>
+    </template>
   </template>
 
   <script>
@@ -258,6 +272,16 @@ note:
         }else{
           return false;
         }
+      }, 
+
+      _multidateRemove: function(e){
+        this.splice('selectedDates', this.selectedDates.indexOf(e.model.item), 1);
+        //if the date is in the month view currently displayed, redraw to clear selection...
+        if(this.mDate.format('YYYY-MM') == moment(e.model.item, this.dateFormat).format('YYYY-MM')){
+          var node = this.$$('sched-month-view');
+          node.createMonthView();
+        }
+        
       }
 
     });

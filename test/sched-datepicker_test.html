@@ -20,10 +20,20 @@
 
     <script>
       suite('sched-datepicker', function() {
-        test('instantiating the element works', function() {
+        test('instantiating a basic element works', function() {
           var element = fixture('basic');
           assert.equal(element.is, 'sched-datepicker');
         });
+
+        test('moment is here', function(){
+          assert.equal(moment('2017-02-04','YYYY-MM-DD').format('YYYY-MM-DD'), '2017-02-04');
+        });
+
+        test('basic element renders correct amount of days', function(){
+          var element = fixture('basic');
+          assert.equal(element.querySelectorAll('paper-button').length, moment().daysInMonth());
+        });
+
       });
     </script>
   </body>
