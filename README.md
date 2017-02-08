@@ -14,12 +14,13 @@ note:
 
 ## DEMO
 
-<!--
+<!---
 ```
 <custom-element-demo>
   <template>
-		<link rel="import" href="sched-datepicker.html">
-    <sched-datepicker></sched-datepicker>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="sched-datepicker.html">
+    <next-code-block></next-code-block>
   </template>
 </custom-element-demo>
 ```
