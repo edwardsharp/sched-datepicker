@@ -23,13 +23,13 @@
 features:
   - today button 
   - min & max dates 
-  - select from an array of available dates
+  - array of available dates
   - multi date picker (select multiple dates)
   - date range picker (select two dates: start & end)
 
 note: 
   - multidate & rangedate can't be used at the same time! 
-
+  - dateFormat, headingSelectedFormat, & headingNotSelectedFormat properties are moment.js format strings; doc: https://momentjs.com/docs/#/displaying/format/
 
 ## API DOC, DEMO, & TEST PAGES
 
@@ -55,4 +55,8 @@ $ polymer test
 
 ## problems? feature requests?
 
-create an issue.
+create a github issue?
+
+## LICENSE 
+
+GNU General Public License version 3 (GPL-3.0)
