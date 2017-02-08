@@ -12,6 +12,22 @@ features:
 note: 
   - multidate & rangedate can't be used at the same time! 
 
+## DEMO
+
+<!--
+```
+<custom-element-demo>
+  <template>
+		<link rel="import" href="sched-datepicker.html">
+    <sched-datepicker></sched-datepicker>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<sched-datepicker></sched-datepicker>
+```
+
 ## API DOC, DEMO, & TEST PAGES
 
 API DOC & DEMO: https://edwardsharp.github.io/sched-datepicker/
