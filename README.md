@@ -1,4 +1,20 @@
-# \<sched-datepicker\>
+<!---
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="sched-datepicker.html">
+    <style is="custom-style" include="demo-pages-shared-styles"></style>
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<sched-datepicker></sched-datepicker>
+```
 
 ### yet another datepicker (a prototype for sched.site)
 
@@ -11,22 +27,7 @@ features:
 
 note: 
   - multidate & rangedate can't be used at the same time! 
-
-## DEMO
-
-<!---
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="index.html">
-    <next-code-block></next-code-block>
-  </template>
-</custom-element-demo>
-```
--->
-```html
-<sched-datepicker></sched-datepicker>
-```
+  
 
 ## API DOC, DEMO, & TEST PAGES
 
