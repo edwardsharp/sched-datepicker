@@ -18,8 +18,7 @@ note:
 ```
 <custom-element-demo>
   <template>
-    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="sched-datepicker.html">
+    <link rel="import" href="index.html">
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>
