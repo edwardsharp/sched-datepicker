@@ -18,6 +18,8 @@
 
 ### yet another datepicker (a prototype for sched.site)
 
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/edwardsharp/sched-datepicker)
+
 features:
   - today button 
   - min & max dates 
@@ -27,7 +29,7 @@ features:
 
 note: 
   - multidate & rangedate can't be used at the same time! 
-  
+
 
 ## API DOC, DEMO, & TEST PAGES
 
