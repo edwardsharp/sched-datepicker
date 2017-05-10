@@ -11,6 +11,7 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../sched-datepicker.html">
+    <link rel="import" href="../sched-datepicker-dialog.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
@@ -24,7 +25,25 @@
             sched-datepicker {
               --primary-bg-color: orange;
             }
+
+            paper-icon-button.custom:hover {
+              background-color: var(--paper-grey-200);
+              border-radius: 50%;
+            }
           </style>
+
+          <h3>Dialog</h3>
+          <p>Button triggers multi-date picker in a dialog</p>
+          <paper-icon-button class="custom" icon="date-range" onclick="scope.$.dialog.openSchedDatepicker()" title="Date picker"></paper-icon-button>
+          <sched-datepicker-dialog id="dialog" multidate="true" selected-dates="{{dialogSelectedDates}}"></sched-datepicker-dialog>
+          <template is="dom-if" if="[[dialogSelectedDates]]">
+            Dialog selected dates: 
+            <template is="dom-repeat" items="[[dialogSelectedDates]]">
+              [[item]]
+            </template>
+          </template>
+
+          <hr>
 
           <h3>Minimal</h3>
           <p>Select a single date.</p>
