@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>sched-datepicker demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../sched-datepicker.html">
+    <link rel="import" href="../sched-datepicker-dialog.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic sched-datepicker demo</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="scope">
+          <style is="custom-style">
+            sched-datepicker {
+              --primary-bg-color: orange;
+            }
+
+            paper-icon-button.custom:hover {
+              background-color: var(--paper-grey-200);
+              border-radius: 50%;
+            }
+          </style>
+
+          <h3>Dialog</h3>
+          <p>Button triggers multi-date picker in a dialog</p>
+          <paper-icon-button class="custom" icon="date-range" onclick="scope.$.dialog.openSchedDatepicker()" title="Date picker"></paper-icon-button>
+          <sched-datepicker-dialog id="dialog" multidate="true" selected-dates="{{dialogSelectedDates}}"></sched-datepicker-dialog>
+          <template is="dom-if" if="[[dialogSelectedDates]]">
+            Dialog selected dates: 
+            <template is="dom-repeat" items="[[dialogSelectedDates]]">
+              [[item]]
+            </template>
+          </template>
+
+          <hr>
+
+          <h3>Minimal</h3>
+          <p>Select a single date.</p>
+          <sched-datepicker date="{{date}}" is-selected="{{isSelected}}">
+          </sched-datepicker>
+          <hr> 
+
+          <h3>Min &amp; Max dates</h3>
+          <p>Today button hidden if today's date is not between 2020-01-01 &amp; 2020-06-06.</p>
+          <sched-datepicker date="{{date}}" is-selected="{{isSelected}}" min-date="2020-01-01" max-date="2020-06-06">
+          </sched-datepicker>
+          <hr> 
+          
+          <h3>Available dates</h3>
+          <p>Select a single date between 2017-04-20 &amp; 2017-06-06 that is included in a list of available dates.</p>
+          <sched-datepicker date="{{date}}" is-selected="{{isSelected}}" min-date="2017-04-20" max-date="2017-06-06" available-dates="[[availableDates]]">
+          </sched-datepicker>
+          <hr> 
+          
+          <h3>Multi-date</h3>
+          <p>Select multiple dates</p>
+          <sched-datepicker date="{{date}}" is-selected="{{isSelected}}" multidate="true" selected-dates="{{selectedDates}}">
+          </sched-datepicker>
+          <hr> 
+          
+          <h3>Range</h3>
+          <p>Select a single range (two dates: start &amp; end)</p>
+          <sched-datepicker date="{{date}}" is-selected="{{isSelected}}" min-date="2017-01-01" max-date="2017-06-06" rangedate="[[rangedate]]" selected-range="{{selectedRange}}">
+          </sched-datepicker>
+          <hr> 
+          
+          <template is="dom-if" if="[[!rangedate]]">
+          <template is="dom-if" if="[[isSelected]]">
+            Selected Date: [[date]]
+          </template>
+          </template>
+          <template is="dom-if" if="[[multidate]]">
+            Selected Dates: 
+            <template is="dom-repeat" items="[[selectedDates]]">
+              [[item]]
+            </template>
+          </template>
+          <template is="dom-if" if="[[rangedate]]">
+            Selected Range start: [[selectedRange.start]], end: [[selectedRange.end]] 
+          </template>
+        </template>
+        <script>
+          HTMLImports.whenReady(function() {
+            var scope = Polymer.dom(document).querySelector('#scope');
+            scope.availableDates = ['2017-04-20', '2017-04-22', '2017-04-24', '2017-04-28', '2017-03-01', '2017-03-06', '2017-03-07', '2017-03-08', '2017-03-09', '2017-03-10', '2017-06-01', '2017-06-03', '2017-06-06'];
+            scope.rangedate = true;
+
+            // scope.customStyle['--primary-bg-color'] = 'orange';
+            // scope.updateStyles();
+            
+          });
+        </script>
+
+      </demo-snippet>
+    </div>
+  </body>
+</html>

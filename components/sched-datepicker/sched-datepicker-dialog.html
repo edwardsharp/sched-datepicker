@@ -1,0 +1,148 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+<!-- <link rel="import" href="../iron-flex-layout/iron-flex-layout.html"> -->
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
+<!-- <script src="../moment/min/moment.min.js"></script> -->
+
+<link rel="import" href="sched-datepicker.html">
+<!--
+`sched-datepicker-dialog`
+
+a dialog/modal window for yr date pickin' needz!
+
+
+### Styling
+
+`<sched-datepicker>` provides the following custom properties for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--primary-bg-color` | Primary background color (buttons) | `--paper-red-500`
+`--hover-bg-color` | Hover background color (buttons) | `--paper-grey-200`
+`--hover-color` | Text color when hovering (buttons) | `white`
+`--today-bg-color` | Background color of today (buttons) | `#eceff1`
+
+@demo demo/index.html 
+-->
+
+<dom-module id="sched-datepicker-dialog">
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+        width: 100%;
+        --primary-bg-color: var(--paper-red-500);
+        --hover-bg-color: var(--paper-grey-200);
+        --hover-color: white;
+        --today-bg-color: #eceff1;
+      }
+
+      paper-icon-button {
+        border-radius: 999px;
+      }
+      paper-icon-button:hover {
+        background-color: var(--hover-bg-color);
+      }
+
+      paper-dialog{
+        min-width: 333px;
+        width: 33vw;
+      }
+
+      
+    </style>
+
+    <paper-dialog id="dialog" with-backdrop>
+      <paper-dialog-scrollable>
+
+        <sched-datepicker date="{{date}}" m-date="{{mDate}}" date-format="{{dateFormat}}" m-date-trigger="{{mDateTrigger}}" is-selected="{{isSelected}}" min-date="{{minDate}}" max-date="{{maxDate}}" available-dates="{{availableDates}}" multidate="[[multidate]]" selected-dates="{{selectedDates}}" rangedate="[[rangedate]]", selected-range="{{selectedRange}}"></sched-datepicker>
+
+        <hr> 
+
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <!-- <paper-button dialog-dismiss>Cancel</paper-button> -->
+        <paper-button dialog-confirm autofocus>Done</paper-button>
+      </div>
+    </paper-dialog>
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sched-datepicker-dialog',
+      listeners: {
+        'openSchedDatepicker': 'openSchedDatepicker'
+      },
+      properties: {
+        dateFormat: {
+          type: String,
+          value: 'YYYY-MM-DD'
+        },
+        headingSelectedFormat: {
+          type: String,
+          value: 'ddd, MMM D, YYYY'
+        },
+        headingNotSelectedFormat: {
+          type: String,
+          value: 'MMMM YYYY'
+        },
+        date: {
+          type: String,
+          notify: true
+        },
+        selectedDate: {
+          type: String,
+          notify: true
+        },
+        multidate: {
+          type: Boolean,
+          value: false
+        },
+        selectedDates: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        rangedate: {
+          type: Boolean,
+          value: false
+        },
+        selectedRange: {
+          type: Object,
+          notify: true,
+          value: {start: '', end: ''}
+        },
+        isSelected: {
+          type: Boolean,
+          notify: true,
+          value: false
+        },
+        availableDates: {
+          type: Array,
+          notify: true
+        },
+        minDate: {
+          type: String,
+          notify: true
+        },
+        maxDate: {
+          type: String,
+          notify: true
+        }
+      },
+      openSchedDatepicker: function(e){
+        console.log('openSchedDatepicker!');
+        this.$.dialog.open();
+      }
+
+    });
+  </script>
+</dom-module>
+
