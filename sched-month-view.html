@@ -226,7 +226,7 @@ yet another month-view (sched.site)
 
           e.target.classList.add('selected');
 
-          _toClear = this.querySelectorAll(':scope .selected');
+          _toClear = Polymer.dom(this.root).querySelectorAll('.selected');
           for (var i = 0; i < _toClear.length; i++) {
               if(this.selectedDates.indexOf(_toClear[i].date) == -1){
                 _toClear[i].classList.remove('selected');
@@ -234,7 +234,7 @@ yet another month-view (sched.site)
           }
 
         }else{
-          _toClear = this.querySelectorAll(':scope .selected');
+          _toClear = Polymer.dom(this.root).querySelectorAll('.selected');
           for (var i = 0; i < _toClear.length; i++) {
               _toClear[i].classList.remove('selected');
           }
